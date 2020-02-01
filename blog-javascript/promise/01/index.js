@@ -1,7 +1,3 @@
-# 实现Promise
-
-## Code
-```js
 const isFunction = obj => typeof obj === 'function'
 const isObject = obj => !!(obj && typeof obj === 'object')
 const isThenable = obj => (isFunction(obj) || isObject(obj)) && 'then' in obj
@@ -96,8 +92,14 @@ class MyPromise {
     while (this.callbacks.length) this.handleCallback(this.callbacks.shift(), state, result)
   }
 }
-```
 
-## 参考
-* [100 行代码实现 Promises/A+ 规范](https://mp.weixin.qq.com/s/Yrwe2x6HukfqJZM6HkmRcw)
-* [Promises/A+](https://promisesaplus.com/)
+MyPromise.deferred  = function() {
+  const defer = {}
+  defer.promise = new MyPromise((resolve, reject) => {
+    defer.resolve = resolve
+    defer.reject = reject
+  })
+  return defer
+}
+
+module.exports = MyPromise
