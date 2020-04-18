@@ -1,55 +1,34 @@
-/**
- * Created by wconisan on 2020/4/17.
- */
-// 用 Class 实现 EventEmitter，要求拥有 on，once，emit，off 方法
-class EventEmitter {
-  events = {}
+var deleteNode = function(head, val) {
+  if (head.next === null || head.val === val) { return head }
 
-  on (eventName, cb) {
-    if (this.events[eventName] === undefined) {
-      this.events[eventName] = []
+  let prev = {
+    val: -99,
+    next: head
+  }
+  let helper = prev
+
+  while (helper.next) {
+    if (helper.next.val === val) {
+      helper.next = helper.next.next || null
     }
 
-    this.events[eventName].push(cb)
+    helper = helper.next
   }
 
-  emit(eventName, ...arg) {
-    (this.events[eventName] || []).forEach(cb => {
-      cb(...arg)
-    })
-  }
+  return prev.next
+};
 
-  once (eventName, cb) {
-    const fn = (...arg) => {
-      cb.apply(this, arg)
-      this.off(eventName, fn)
-    }
-
-    this.on(eventName, fn)
-  }
-
-  off (eventName, cb) {
-    if (this.events[eventName]) {
-      this.events[eventName].splice(this.events[eventName].indexOf(cb) >>> 0, 1)
+const h = {
+  val: 4,
+  next: {
+    val: 5,
+    next: {
+      val: 1,
+      next: {
+        val: 9,
+        next: null
+      }
     }
   }
 }
-
-const ee = new EventEmitter()
-
-ee.once('print', (e) => {
-  console.log('1' + e)
-})
-
-const foo = () => {
-  console.log('foo')
-}
-ee.on('foo', foo)
-
-ee.emit('print', 1) // 11
-ee.emit('print', 2) // unemit
-
-ee.emit('foo') // foo
-ee.off('foo', foo)
-
-ee.emit('foo') // unemit
+console.log(deleteNode(h, 5))
